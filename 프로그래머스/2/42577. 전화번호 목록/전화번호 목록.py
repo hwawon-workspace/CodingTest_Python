@@ -1,3 +1,4 @@
+# hash map 풀이
 def solution(phone_book): 
 
     hash_map = {} 
@@ -12,4 +13,13 @@ def solution(phone_book):
             if prefix in hash_map and prefix != nums:       
                 return False 
                 
+    return True
+
+# sorting -> startswith 사용 풀이
+def solution(phoneBook):
+    phoneBook = sorted(phoneBook)
+
+    for p1, p2 in zip(phoneBook, phoneBook[1:]):
+        if p2.startswith(p1):
+            return False
     return True

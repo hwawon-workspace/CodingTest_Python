@@ -1,18 +1,17 @@
-def solution(n, lost, reserve):
+def solution(n, lost, reserve): # 전체 학생 수, 도난 번호, 여벌 번호    
+    answer = 0 # 체육복 있는 학생 최댓값
     lost, reserve = set(lost), set(reserve)
+    no_spare = lost & reserve
+    lost -= no_spare
+    reserve -= no_spare
     
-    # 여벌 있는 학생
-    spare = lost & reserve
-    lost -= spare
-    reserve -= spare
-    
-    # 빌려주기
-    for r in sorted(reserve):
-        if r-1 in lost:
-            lost.remove(r-1)
-        elif r+1 in lost:
-            lost.remove(r+1)
-        continue
-
-    answer = n - len(lost)
+    remain = lost
+    for l in list(lost):
+        if l-1 in reserve:
+            remain.remove(l)
+            reserve.remove(l-1)
+        elif l+1 in reserve:
+            remain.remove(l)
+            reserve.remove(l+1)
+    answer = n - len(remain)
     return answer

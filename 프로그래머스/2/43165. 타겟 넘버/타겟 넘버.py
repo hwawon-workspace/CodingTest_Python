@@ -1,20 +1,14 @@
-# recursion 풀이
+# 모든 경우의 수 -> DFS
 def solution(numbers, target):
-    def dfs(cnt, current_sum):
-        if cnt == len(numbers):
-            if current_sum == target:
-                return 1
-            else:
-                return 0
+    sums = []
+    
+    def dfs(idx, current_sum):
+        if idx == len(numbers):
+            sums.append(current_sum)
+            return
 
-        return dfs(cnt + 1, current_sum + numbers[cnt]) + dfs(cnt + 1, current_sum - numbers[cnt])
-
-    return dfs(0, 0)
-
-# map, product 활용 풀이
-from itertools import product
-
-def solution(numbers, target):
-    l = [(x, -x) for x in numbers]
-    s = list(map(sum, product(*l)))
-    return s.count(target)
+        dfs(idx+1, current_sum + numbers[idx])
+        dfs(idx+1, current_sum - numbers[idx])
+    
+    dfs(0, 0)
+    return sums.count(target)

@@ -9,6 +9,6 @@ def solution(n, money):
     for m in money:
         for price in range(m, n+1):
             dp[price] += dp[price-m]
-            dp[price] % MOD
+            dp[price] %= MOD
     
     return dp[n]

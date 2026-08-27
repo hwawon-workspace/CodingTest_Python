@@ -1,0 +1,31 @@
+-- 코드를 입력하세요
+
+-- 트럭인 자동차 대여기록
+
+
+-- 대여기록별 대여금액
+-- 대여 기록 ID, 대여 금액 리스트
+
+SELECT HISTORY_ID, (DURATION*DAILY_FEE*PAY_RATE) AS FEE
+FROM(
+SELECT HISTORY_ID, DURATION, DAILY_FEE,
+    CASE 
+        WHEN DURATION >= 90 THEN (SELECT (100 - DISCOUNT_RATE)/100
+                                FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN
+                                 WHERE CAR_TYPE = '트럭' AND DURATION_TYPE = '90일 이상')
+        WHEN DURATION >= 30 THEN (SELECT (100 - DISCOUNT_RATE)/100
+                                FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN
+                                 WHERE CAR_TYPE = '트럭' AND DURATION_TYPE = '30일 이상')
+        WHEN DURATION >= 7 THEN (SELECT (100 - DISCOUNT_RATE)/100
+                                FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN
+                                 WHERE CAR_TYPE = '트럭' AND  DURATION_TYPE = '7일 이상')
+        ELSE 1  
+    END AS PAY_RATE
+FROM (SELECT HISTORY_ID, CAR_ID, DATEDIFF(END_DATE, START_DATE)+1 AS DURATION
+     FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY) A 
+     NATURAL JOIN
+     (SELECT CAR_ID, DAILY_FEE
+      FROM CAR_RENTAL_COMPANY_CAR
+      WHERE CAR_TYPE = '트럭') B) C
+ORDER BY FEE DESC, HISTORY_ID DESC
+;
